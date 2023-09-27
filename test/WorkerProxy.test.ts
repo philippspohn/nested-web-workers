@@ -1,6 +1,6 @@
 import WorkerProxy from '../src/WorkerProxy';
 import * as helpers from '../src/helpers';
-import {ProxyNotification, ProxyNotificationMessage} from "../src/MessageTypes";
+import {ProxyNotificationMessage} from "../src/MessageTypes";
 
 jest.mock('../src/helpers', () => {
     const originalModule = jest.requireActual('../src/helpers');
@@ -78,7 +78,7 @@ describe('WorkerProxy', () => {
         const notification: ProxyNotificationMessage = {
             __nww_notification: true,
             senderId: 'someId', targetId: 'someId',
-            notification: {type: 'message', messageEvent: new MessageEvent('message', {data: 'sampleMessage'})}
+            notification: {type: 'message', messageEvent: {data: 'sampleMessage'}}
         };
         global.dispatchEvent(new MessageEvent('message', {data: notification}));
 

@@ -6,14 +6,25 @@ type EventListenerEntry = {
     options?: EventListenerOptions | boolean;
 };
 
+/**
+ * WorkerProxy acts as a surrogate for native Web Workers, enabling the creation
+ * of nested web workers (web workers inside other web workers) in environments where
+ * this isn't natively supported. Instead of directly instantiating workers, it sends
+ * commands to the main thread which then manages the actual worker instances.
+ */
 class WorkerProxy implements Worker {
     private readonly id: string;
+    private listeners: Map<string, EventListenerEntry[]> = new Map();
 
     constructor(scriptURL: string | URL, options?: WorkerOptions) {
         this.id = generateId();
+
+        // Register this proxy worker with the main thread.
         this.runCommand({
             type: "register", scriptURL, options
         });
+
+        // Listening for notifications from the actual nested worker.
         self.addEventListener("message", (e: MessageEvent) => {
             // Listen to event notifications from the actual worker
             if (e.data && e.data.__nww_notification && e.data.senderId === this.id) {
@@ -51,16 +62,14 @@ class WorkerProxy implements Worker {
         });
     }
 
-    onerror(ev: ErrorEvent): any {
+    onerror(_: ErrorEvent): any {
     }
 
-    onmessage(ev: MessageEvent): any {
+    onmessage(_: MessageEvent): any {
     }
 
-    onmessageerror(ev: MessageEvent): any {
+    onmessageerror(_: MessageEvent): any {
     }
-
-    private listeners: Map<string, EventListenerEntry[]> = new Map();
 
     addEventListener<K extends keyof WorkerEventMap>(type: K, listener: (this: Worker, ev: WorkerEventMap[K]) => any, options?: boolean | AddEventListenerOptions): void;
     addEventListener(type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions): void;
@@ -83,8 +92,7 @@ class WorkerProxy implements Worker {
     removeEventListener<K extends keyof AbstractWorkerEventMap>(type: K, listener: (this: AbstractWorker, ev: AbstractWorkerEventMap[K]) => any, options?: boolean | EventListenerOptions): void;
     removeEventListener(
         type: any,
-        callback: any,
-        options?: any
+        callback: any
     ): void {
         const listeners = this.listeners.get(type);
         if (listeners) {
@@ -99,6 +107,7 @@ class WorkerProxy implements Worker {
         }
     }
 
+    // Trigger all the event listeners for a given event type.
     dispatchEvent(event: Event): boolean {
         const listeners = this.listeners.get(event.type);
         if (!listeners) return !event.defaultPrevented;
@@ -126,6 +135,7 @@ class WorkerProxy implements Worker {
         this.runCommand({type: "terminate"});
     }
 
+    // Sends commands to the main thread.
     private runCommand(command: ProxyCommand): any {
         const commandMsg: ProxyCommandMessage = {
             __nww_command: true, command, targetId: this.id

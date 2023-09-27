@@ -12,12 +12,12 @@ npm install nested-web-workers
 
 You can directly include the library in your HTML using a script tag:
 ```
-<script src="https://cdn.jsdelivr.net/npm/nested-web-workers@1.0.0/dist/nested-web-workers.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/nested-web-workers@1.0.1/dist/nested-web-workers.umd.js"></script>
 ```
 
 Using importScripts:
 ```
-importScripts('path-to-your-folder/dist/nested-web-workers.umd.js');
+importScripts('https://cdn.jsdelivr.net/npm/nested-web-workers@1.0.1/dist/nested-web-workers.umd.js');
 ```
 
 ## Usage

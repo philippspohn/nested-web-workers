@@ -1,11 +1,12 @@
 {
   "name": "nested-web-workers",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Polyfill for nested web workers compatibility across browsers.",
   "main": "dist/nested-web-workers.cjs.js",
   "module": "dist/nested-web-workers.esm.js",
   "browser": "dist/nested-web-workers.umd.js",
   "types": "dist/index.d.ts",
+  "keywords": ["web worker", "subworker"],
   "scripts": {
     "build": "rollup -c",
     "test": "jest",
