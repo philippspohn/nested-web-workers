@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Worker Nested Example</title>
+    <style>
+        .root-worker {
+            border: 1px solid black;
+            margin: 10px;
+            padding: 10px;
+            background-color: #eee;
+            max-width: 350px;
+        }
+        .output-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/nested-web-workers@1.0.0/dist/nested-web-workers.umd.js"></script>
+    <script>
+
+        let outputs = [];
+        let currentId = 0;
+
+        function updateOutput() {
+            let output = "";
+            for (let i = 0; i < currentId; i++) {
+                output += `<div class="root-worker">Worker ${i}: ${outputs[i].join("")}</div>`;
+            }
+            document.getElementById("output").innerHTML = `<div class="output-wrapper">${output}</div>`;
+        }
+        function startWorker() {
+            if (typeof (Worker) !== "undefined") {
+                const workerId = currentId++;
+                const workerOutputs = []
+                outputs[workerId] = workerOutputs;
+
+                // Create a new worker
+                const worker = new Worker("worker.js");
+
+                // Listen for messages from the worker
+                worker.onmessage = NestedWebWorkers.filterControlMessages(function (event) {
+                    workerOutputs.push(`<p style="color: green;">${event.data}</p>`);
+                    updateOutput();
+                });
+
+                // Listen for errors from the worker
+                worker.onerror = NestedWebWorkers.filterControlMessages(function (event) {
+                    workerOutputs.push(`<p style="color: red;">${event.message}</p>`);
+                    updateOutput();
+                });
+
+                // Start the worker
+                workerOutputs.push(`<p style="color: blue;">Starting worker ${workerId}</p>`);
+                updateOutput();
+                worker.postMessage("start");
+            } else {
+                document.getElementById("output").innerHTML = "Sorry! Web Worker is not supported in your browser.";
+            }
+        }
+    </script>
+</head>
+<body>
+<h1>Web Worker Nested Test</h1>
+<pre>
+    If you click the start button, the following workers will be created:
+
+    root-worker (returns success message and creates workerA, workerB, workerBad)
+    ├─ workerA (returns success message)
+    ├─ workerB (returns success message and creates nested workerA)
+    │  └─ workerA (returns success message)
+    └─ workerBad (throws an error)
+</pre>
+<button onclick="startWorker()">Start Worker</button>
+<p id="output"></p>
+
+</body>
+</html>
