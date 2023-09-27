@@ -12,6 +12,9 @@
     "test": "jest",
     "test:watch": "jest --watchAll"
   },
+  "files": [
+    "dist/"
+  ],
   "author": "Philipp Spohn",
   "license": "MIT",
   "devDependencies": {
