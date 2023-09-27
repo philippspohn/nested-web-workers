@@ -1,4 +1,4 @@
-importScripts('https://cdn.jsdelivr.net/npm/nested-web-workers@1.0.0/dist/nested-web-workers.umd.js');
+importScripts('https://cdn.jsdelivr.net/npm/nested-web-workers@latest/dist/nested-web-workers.umd.js');
 
 onmessage = NestedWebWorkers.filterControlMessages(function (e) {
     if (e.data === "start") {
@@ -10,7 +10,7 @@ onmessage = NestedWebWorkers.filterControlMessages(function (e) {
 });
 
 function startNestedWorker() {
-    let workerA = new Worker('workerA.js');
+    let workerA = new Worker(new URL('./workerA.js', self.location.href));
 
     workerA.onmessage = function(event) {
         postMessage(`workerB from A -> ${event.data}`);

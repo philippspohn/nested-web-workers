@@ -1,7 +1,7 @@
 // Commands (sent from workers to main thread)
 type RegisterCommand = {
     type: 'register';
-    scriptURL: string | URL;
+    scriptURL: string;
     options?: WorkerOptions;
 };
 

@@ -21,7 +21,7 @@ class WorkerProxy implements Worker {
 
         // Register this proxy worker with the main thread.
         this.runCommand({
-            type: "register", scriptURL, options
+            type: "register", scriptURL: typeof scriptURL === "string" ? scriptURL : scriptURL.href, options
         });
 
         // Listening for notifications from the actual nested worker.
