@@ -20,7 +20,7 @@ class WorkerProxy implements Worker {
         this.id = generateId();
 
         // Register this proxy worker with the main thread.
-        this.runCommand({
+        this.runSimpleCommand({
             type: "register", scriptURL: typeof scriptURL === "string" ? scriptURL : scriptURL.href, options
         });
 
@@ -42,7 +42,7 @@ class WorkerProxy implements Worker {
                         this.onerror(evt);
                         let propagateEvent = this.dispatchEvent(evt);
                         if (propagateEvent) {
-                            this.runCommand({
+                            this.runSimpleCommand({
                                 type: "propagateError",
                                 errorEvent: notification.errorEvent
                             });
@@ -126,17 +126,18 @@ class WorkerProxy implements Worker {
     postMessage(message: any, options?: StructuredSerializeOptions): void;
     postMessage(message: any, transfer?: Transferable[] | StructuredSerializeOptions): void {
         const options: StructuredSerializeOptions | undefined = Array.isArray(transfer) ? {transfer: transfer as Transferable[]} : transfer;
-        this.runCommand({
-            type: "postMessage", message, options
-        });
+        const msg: ProxyCommandMessage = {
+            __nww_command: true, command: {type: "postMessage", message}, targetId: this.id
+        }
+        self.postMessage(msg, options);
     }
 
     terminate(): void {
-        this.runCommand({type: "terminate"});
+        this.runSimpleCommand({type: "terminate"});
     }
 
     // Sends commands to the main thread.
-    private runCommand(command: ProxyCommand): any {
+    private runSimpleCommand(command: ProxyCommand): any {
         const commandMsg: ProxyCommandMessage = {
             __nww_command: true, command, targetId: this.id
         };

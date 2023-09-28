@@ -8,7 +8,6 @@ type RegisterCommand = {
 type PostMessageCommand = {
     type: 'postMessage';
     message: any;
-    options?: StructuredSerializeOptions;
 };
 
 type TerminateCommand = {

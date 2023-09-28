@@ -32,8 +32,7 @@ if (isWorker) {
 
     const handleWorkerMessage = (workerId: string, parentId?: string) => (e: MessageEvent) => {
         if (e.data && e.data.__nww_command) {
-            const msg = e.data as ProxyCommandMessage;
-            handleCommand(msg, workerId);
+            handleCommand(e, workerId);
         } else {
             if (!parentId) return; // If there's no parent, it's not a nested worker
             relayNestedWorkerMessageToProxy(e, workerId, parentId);
@@ -41,7 +40,8 @@ if (isWorker) {
     };
 
 
-    const handleCommand = (msg: ProxyCommandMessage, workerId: string) => {
+    const handleCommand = (event: MessageEvent, workerId: string) => {
+        const msg = event.data as ProxyCommandMessage;
         const command = msg.command;
         switch (command.type) {
             case "register":
@@ -50,7 +50,7 @@ if (isWorker) {
                 break;
             case "postMessage":
                 if (managedWorkers[msg.targetId]) {
-                    managedWorkers[msg.targetId].worker.postMessage(command.message, command.options);
+                    managedWorkers[msg.targetId].worker.postMessage(command.message, [...event.ports]);
                 }
                 break;
             case "terminate":
@@ -87,7 +87,7 @@ if (isWorker) {
                 }
             }
         };
-        managedWorkers[parentId].worker.postMessage(notification);
+        managedWorkers[parentId].worker.postMessage(notification, [...e.ports]);
     };
 
     const handleWorkerError = (workerId: string, parentId: string) => (e: ErrorEvent) => {

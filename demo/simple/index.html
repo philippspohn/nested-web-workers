@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Web Worker Nested Example</title>
     <style>
-        .root-worker {
+        .main-worker {
             border: 1px solid black;
             margin: 10px;
             padding: 10px;
@@ -26,7 +26,7 @@
         function updateOutput() {
             let output = "";
             for (let i = 0; i < currentId; i++) {
-                output += `<div class="root-worker">Worker ${i}: ${outputs[i].join("")}</div>`;
+                output += `<div class="main-worker">Worker ${i}: ${outputs[i].join("")}</div>`;
             }
             document.getElementById("output").innerHTML = `<div class="output-wrapper">${output}</div>`;
         }
@@ -66,7 +66,7 @@
 <pre>
     If you click the start button, the following workers will be created:
 
-    root-worker (returns success message and creates workerA, workerB, workerBad)
+    main-worker (returns success message and creates workerA, workerB, workerBad)
     ├─ workerA (returns success message)
     ├─ workerB (returns success message and creates nested workerA)
     │  └─ workerA (returns success message)

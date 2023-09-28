@@ -3,7 +3,7 @@ importScripts('https://cdn.jsdelivr.net/npm/nested-web-workers@latest/dist/neste
 onmessage = NestedWebWorkers.filterControlMessages(function (e) {
     if (e.data === "start") {
         setTimeout(() => {
-            postMessage("[root success, starting nested workers]");
+            postMessage("[main success, starting nested workers]");
             startNestedWorkers();
         }, 1000);
     }
@@ -16,28 +16,28 @@ function startNestedWorkers() {
 
 
     workerA.onmessage = function (event) {
-        postMessage(`root from A -> ${event.data}`);
+        postMessage(`main from A -> ${event.data}`);
     };
 
     workerA.onerror = function (event) {
-        postMessage(`root from A (ERR) -> ${event.message}`);
+        postMessage(`main from A (ERR) -> ${event.message}`);
     }
 
     workerB.onmessage = function (event) {
-        postMessage(`root from B -> ${event.data}`)
+        postMessage(`main from B -> ${event.data}`)
     }
 
     workerB.onerror = function (event) {
-        postMessage(`root from B (ERR) -> ${event.message}`)
+        postMessage(`main from B (ERR) -> ${event.message}`)
     }
 
     workerBad.onmessage = function (event) {
-        postMessage(`root from Bad -> ${event.data}`)
+        postMessage(`main from Bad -> ${event.data}`)
     }
 
     workerBad.onerror = function (event) {
         event.preventDefault(); // Prevents error from propagating further.
-        postMessage(`root from Bad (ERR) -> ${event.message}`);
+        postMessage(`main from Bad (ERR) -> ${event.message}`);
     }
 
     workerA.postMessage("start");
