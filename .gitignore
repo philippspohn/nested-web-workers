@@ -8,13 +8,17 @@ npm-debug.log
 yarn-debug.log
 yarn-error.log
 package-lock.json
+pnpm-lock.yaml
 yarn.lock
-
-# TypeScript
-dist/
-*.tsbuildinfo
 
 # IDEs
 .idea/
 *.code-workspace
 .vscode/
+
+# Other
+tmp
+test/tmp
+dist/
+*.tsbuildinfo
+coverage/

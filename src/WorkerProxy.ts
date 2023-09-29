@@ -59,7 +59,7 @@ class WorkerProxy implements Worker {
                         console.warn("Unknown notification", notification);
                 }
             }
-        });
+        }, {direct: true} as any);
     }
 
     onerror(_: ErrorEvent): any {

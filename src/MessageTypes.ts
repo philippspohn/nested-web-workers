@@ -19,7 +19,6 @@ type PropagateErrorCommand = {
     errorEvent: ErrorEventInit;
 }
 
-
 type ProxyCommand = RegisterCommand | PostMessageCommand | TerminateCommand | PropagateErrorCommand;
 
 type ProxyCommandMessage = {

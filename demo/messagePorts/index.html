@@ -40,16 +40,16 @@
                 const worker = new Worker("workerMain.js");
 
                 // Listen for messages from the worker
-                worker.onmessage = NestedWebWorkers.filterControlMessages(function (event) {
+                worker.onmessage = function (event) {
                     workerOutputs.push(`<p style="color: green;">${event.data}</p>`);
                     updateOutput();
-                });
+                };
 
                 // Listen for errors from the worker
-                worker.onerror = NestedWebWorkers.filterControlMessages(function (event) {
+                worker.onerror = function (event) {
                     workerOutputs.push(`<p style="color: red;">${event.message}</p>`);
                     updateOutput();
-                });
+                };
 
                 // Start the worker
                 workerOutputs.push(`<p style="color: blue;">Starting worker ${workerId}</p>`);

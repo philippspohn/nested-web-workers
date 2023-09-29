@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
     "declaration": true,
+    "typeRoots": ["./node_modules/@types"],
     "target": "ES6",
     "module": "esnext",
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "./",
     "strict": true,
     "esModuleInterop": true,
+    "moduleResolution": "node"
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules"]

@@ -1,6 +1,6 @@
 importScripts('https://cdn.jsdelivr.net/npm/nested-web-workers@latest/dist/nested-web-workers.umd.js');
 
-onmessage = NestedWebWorkers.filterControlMessages(function(e) {
+onmessage = (function(e) {
     if (e.data.type === "start") {
         postMessage({type: "message", message: "[two]: worker started"});
     } else if (e.data.type === "port") {
