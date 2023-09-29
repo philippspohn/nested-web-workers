@@ -1,6 +1,6 @@
 {
   "name": "nested-web-workers",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Polyfill for nested web workers compatibility across browsers.",
   "main": "dist/nested-web-workers.cjs.js",
   "module": "dist/nested-web-workers.esm.js",
